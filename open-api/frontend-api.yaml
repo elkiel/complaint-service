@@ -1,0 +1,14 @@
+openapi: 3.0.1
+info:
+  title: Complaint Frontend API
+  version: 1.0.0
+  description: API for managing product complaints for frontend clients
+
+paths:
+  /complaint:
+    $ref: './complaint.yaml#/ComplaintAddPath'
+  /complaint/{complaintId}:
+    $ref: './complaint.yaml#/ComplaintEditPath'
+  /complaints:
+    $ref: './complaint.yaml#/ComplaintsPath'
+

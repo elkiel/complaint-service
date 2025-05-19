@@ -1,0 +1,179 @@
+ComplaintsPath:
+  post:
+    operationId: getComplaints
+    tags:
+      - "Complaints"
+    summary: Retrieve a list of complaints based on filtering criteria
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/ComplaintsRequest'
+    responses:
+      '200':
+        description: List of complaints matching criteria
+        content:
+          application/json:
+            schema:
+              $ref: '#/ComplaintResponse'
+
+ComplaintAddPath:
+  post:
+    operationId: createComplaint
+    tags:
+      - "Complaints"
+    summary: Create a new complaint
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/ComplaintCreateRequest'
+    responses:
+      '201':
+        description: Complaint created or counter incremented
+        content:
+          application/json:
+            schema:
+              $ref: '#/Complaint'
+
+ComplaintEditPath:
+  put:
+    operationId: updateComplaintContent
+    tags:
+      - "Complaints"
+    parameters:
+      - name: complaintId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: content
+        in: query
+        required: true
+        schema:
+          type: string
+          example: "Updated complaint text"
+    responses:
+      '200':
+        description: Complaint content updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/Complaint'
+      '404':
+        description: Complaint not found
+
+ComplaintsRequest:
+  type: object
+  properties:
+    meta:
+      $ref: '#/MetaData'
+    criteria:
+      $ref: '#/ComplaintsCriteria'
+  required:
+    - "meta"
+
+ComplaintCreateRequest:
+  type: object
+  properties:
+    productId:
+      format: uuid
+      type: string
+    content:
+      type: string
+      example: "The product stopped working after one week"
+      description: Description of the issue
+    reporter:
+      type: string
+      example: "john.doe@example.com"
+      description: Identifier of the user submitting the complaint
+
+ComplaintsCriteria:
+  type: object
+  properties:
+    id:
+      format: uuid
+      type: string
+    productId:
+      format: uuid
+      type: string
+    reporter:
+      type: string
+    content:
+      type: string
+    country:
+      type: string
+    counter:
+      type: number
+    createdFrom:
+      type: string
+      format: date
+    createdTo:
+      type: string
+      format: date
+
+ComplaintResponse:
+  type: object
+  properties:
+    itemsTotal:
+      type: number
+    data:
+      type: array
+      items: '#/Complaint'
+    required:
+      - "itemsTotal"
+      - "data"
+
+Complaint:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    productId:
+      type: string
+      format: uuid
+    content:
+      type: string
+    reporter:
+      type: string
+    country:
+      type: string
+    counter:
+      type: number
+    createdAt:
+      type: string
+      format: date-time
+    updatedAt:
+      type: string
+      format: date-time
+
+MetaData:
+  type: object
+  properties:
+    actualPage:
+      type: number
+      default: 0
+    pageSize:
+      type: number
+      default: 10
+      maximum: 500
+    sortBy:
+      type: string
+      example: "createdAt"
+    orderBy:
+      $ref: '#/OrderBy'
+      default: null
+    required:
+      - actualPage
+      - pageSize
+
+OrderBy:
+  type: string
+  enum:
+    - ASC
+    - DESC
+

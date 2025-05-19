@@ -1,0 +1,7 @@
+{
+  "productId": "11111111-1111-1111-1111-111111111111",
+  "content": "The product stopped working after one week",
+  "reporter": "test@example.com",
+  "country": "UNKNOWN",
+  "counter": 2.00
+}
